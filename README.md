@@ -8,6 +8,9 @@ This tool calculates annual home ownership returns (including home price appreci
 - Includes US/CA tax assumptions, property tax, insurance, maintenance, selling/buy closing costs
 - Built in Flask (single file app.py)
 
+## URL
+https://vpattar.github.io/homeownership-returns/
+
 ## Usage
 1. Install Flask: `pip install -r requirements.txt`
 2. Run the app: `python app.py`
