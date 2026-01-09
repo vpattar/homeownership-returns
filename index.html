@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Home Ownership Returns Calculator - Calculate your home investment returns">
+    <title>Home Ownership Returns Calculator</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🏠 Home Ownership Returns Calculator</h1>
+            <p class="subtitle">Calculate your home investment returns including EMI, taxes, and opportunity costs</p>
+        </header>
+
+        <main>
+            <div class="calculator-section">
+                <h2>Input Your Details</h2>
+                <form id="calculatorForm">
+                    <div class="form-group">
+                        <label for="purchasePrice">Total Home Value ($)</label>
+                        <input type="number" id="purchasePrice" value="500000" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="downPayment">Down Payment ($)</label>
+                        <input type="number" id="downPayment" value="100000" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="interestRate">Interest Rate (%)</label>
+                        <input type="number" id="interestRate" step="0.1" value="6.5" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="loanTerm">Loan Term (years)</label>
+                        <input type="number" id="loanTerm" value="30" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="appreciationRate">Annual Home Appreciation (%)</label>
+                        <input type="number" id="appreciationRate" step="0.1" value="3" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="propertyTax">Annual Property Tax ($)</label>
+                        <input type="number" id="propertyTax" value="6000" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="insurance">Annual Home Insurance ($)</label>
+                        <input type="number" id="insurance" value="1500" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="maintenance">Annual Maintenance ($)</label>
+                        <input type="number" id="maintenance" value="5000" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="monthlyRent">Monthly Rent Saved ($)</label>
+                        <input type="number" id="monthlyRent" value="2500" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="investmentReturn">Alternative Investment Return (%)</label>
+                        <input type="number" id="investmentReturn" step="0.1" value="7" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="taxBracket">Tax Bracket (%)</label>
+                        <input type="number" id="taxBracket" value="24" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="ownershipYears">Years to Analyze</label>
+                        <input type="number" id="ownershipYears" value="10" required>
+                    </div>
+
+                    <button type="submit" class="calculate-btn">Calculate Returns</button>
+                </form>
+            </div>
+
+            <div id="results" class="results-section" style="display: none;">
+                <h2>Calculation Results</h2>
+                <div class="results-grid">
+                    <div class="result-card">
+                        <h3>Net Return</h3>
+                        <p id="netReturn" class="result-value">$0</p>
+                    </div>
+                    <div class="result-card">
+                        <h3>Final Home Value</h3>
+                        <p id="finalHomeValue" class="result-value">$0</p>
+                    </div>
+                    <div class="result-card">
+                        <h3>Total Costs</h3>
+                        <p id="totalCosts" class="result-value">$0</p>
+                    </div>
+                    <div class="result-card">
+                        <h3>Total Benefits</h3>
+                        <p id="totalBenefits" class="result-value">$0</p>
+                    </div>
+                    <div class="result-card">
+                        <h3>Equity Built</h3>
+                        <p id="equityBuilt" class="result-value">$0</p>
+                    </div>
+                    <div class="result-card">
+                        <h3>Annual ROI</h3>
+                        <p id="annualROI" class="result-value">0%</p>
+                    </div>
+                </div>
+                <div class="details-section">
+                    <h3>Key Details</h3>
+                    <div class="details-grid">
+                        <div class="detail-item">
+                            <span class="detail-label">Monthly EMI:</span>
+                            <span id="monthlyEMI" class="detail-value">$0</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Loan Amount:</span>
+                            <span id="loanAmount" class="detail-value">$0</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Total Interest Paid:</span>
+                            <span id="totalInterest" class="detail-value">$0</span>
+                        </div>
+                        <div class="detail-item">
+                            <span class="detail-label">Total Principal Paid:</span>
+                            <span id="totalPrincipal" class="detail-value">$0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <p>&copy; 2024 Home Ownership Returns Calculator. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
