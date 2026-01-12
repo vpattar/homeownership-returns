@@ -1,5 +1,5 @@
 // Google Apps Script Web App URL - REPLACE WITH YOUR DEPLOYED URL
-const GOOGLE_APPS_SCRIPT_URL = 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE';
+const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxF6RqEA13RHeVlFFcyv8uq2Gt6GSo8dfXGPYOq-IsKXZkO087zjAcfYzhuGKRBOzGSZQ/exec';
 
 // Store calculation results for feedback submission
 let lastCalculationResults = {};
@@ -306,7 +306,7 @@ function submitTextFeedback() {
     }
     
     // Send to Google Drive via Apps Script
-    if (GOOGLE_APPS_SCRIPT_URL && GOOGLE_APPS_SCRIPT_URL !== 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE') {
+    if (GOOGLE_APPS_SCRIPT_URL) {
         const feedbackData = {
             timestamp: new Date().toISOString(),
             sentiment: feedbackGiven || 'unknown',
@@ -320,6 +320,8 @@ function submitTextFeedback() {
             monthlyEMI: lastCalculationResults.monthlyEMI,
             annualROI: lastCalculationResults.annualROI
         };
+
+        console.log('Sending feedback data to Google Drive:', feedbackData);
         
         fetch(GOOGLE_APPS_SCRIPT_URL, {
             method: 'POST',
