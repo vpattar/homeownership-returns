@@ -241,8 +241,69 @@ function createYearlyChart(data) {
     });
 }
 
+// Variable to store feedback state
+let feedbackGiven = null;
+
+// Handle feedback button clicks
+function handleFeedback(sentiment) {
+    feedbackGiven = sentiment;
+    
+    // Update button states
+    const thumbsUp = document.getElementById('thumbsUp');
+    const thumbsDown = document.getElementById('thumbsDown');
+    
+    if (sentiment === 'positive') {
+        thumbsUp.classList.add('selected');
+        thumbsDown.classList.remove('selected');
+    } else {
+        thumbsDown.classList.add('selected');
+        thumbsUp.classList.remove('selected');
+    }
+    
+    // Show text feedback section
+    document.getElementById('feedbackTextSection').style.display = 'block';
+    
+    // Track in Google Analytics
+    if (typeof gtag !== 'undefined') {
+        gtag('event', 'feedback_sentiment', {
+            event_category: 'feedback',
+            event_label: sentiment,
+            value: sentiment === 'positive' ? 1 : 0
+        });
+    }
+}
+
+// Submit text feedback
+function submitTextFeedback() {
+    const feedbackText = document.getElementById('feedbackText').value.trim();
+    
+    // Track in Google Analytics
+    if (typeof gtag !== 'undefined') {
+        gtag('event', 'feedback_submitted', {
+            event_category: 'feedback',
+            event_label: feedbackGiven || 'unknown',
+            feedback_has_text: feedbackText.length > 0,
+            feedback_length: feedbackText.length
+        });
+    }
+    
+    // Hide feedback section and show thanks message
+    document.getElementById('feedbackTextSection').style.display = 'none';
+    document.querySelector('.feedback-buttons').style.display = 'none';
+    document.getElementById('feedbackThanks').style.display = 'block';
+}
+
 // Event listener for form submission
 document.getElementById('calculatorForm').addEventListener('submit', function(e) {
     e.preventDefault();
     calculateReturns();
+    
+    // Reset feedback section when recalculating
+    feedbackGiven = null;
+    document.getElementById('thumbsUp').classList.remove('selected');
+    document.getElementById('thumbsDown').classList.remove('selected');
+    document.getElementById('feedbackTextSection').style.display = 'none';
+    document.getElementById('feedbackText').value = '';
+    document.querySelector('.feedback-buttons').style.display = 'flex';
+    document.getElementById('feedbackThanks').style.display = 'none';
 });

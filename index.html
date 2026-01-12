@@ -145,6 +145,26 @@
                     <h3>Yearly Progress</h3>
                     <canvas id="yearlyChart"></canvas>
                 </div>
+                <div class="feedback-section">
+                    <h3>Was this helpful?</h3>
+                    <div class="feedback-buttons">
+                        <button type="button" class="feedback-btn" id="thumbsUp" onclick="handleFeedback('positive')">
+                            <span class="arrow">▲</span>
+                            <span>Helpful</span>
+                        </button>
+                        <button type="button" class="feedback-btn" id="thumbsDown" onclick="handleFeedback('negative')">
+                            <span class="arrow">▼</span>
+                            <span>Not Helpful</span>
+                        </button>
+                    </div>
+                    <div class="feedback-text-section" id="feedbackTextSection" style="display: none;">
+                        <textarea id="feedbackText" placeholder="Tell us more about your experience (optional)..." rows="4"></textarea>
+                        <button type="button" class="submit-feedback-btn" onclick="submitTextFeedback()">Submit Feedback</button>
+                    </div>
+                    <div class="feedback-thanks" id="feedbackThanks" style="display: none;">
+                        <p>✓ Thank you for your feedback!</p>
+                    </div>
+                </div>
             </div>
         </main>
 
