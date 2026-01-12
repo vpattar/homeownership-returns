@@ -312,6 +312,18 @@ footer {
     border-top: 1px solid #e0e0e0;
 }
 
+/* Form Grid Layout - 2 columns */
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+}
+
+.form-full-width {
+    grid-column: 1 / -1;
+}
+
+/* Responsive - Single column on mobile */
 @media (max-width: 768px) {
     header h1 {
         font-size: 2rem;
@@ -326,6 +338,10 @@ footer {
     }
 
     .details-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .form-grid {
         grid-template-columns: 1fr;
     }
 }
