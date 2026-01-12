@@ -4,11 +4,6 @@ A comprehensive web-based financial calculator that helps you analyze the true c
 
 This application is deployed and accessible on GitHub Pages at: https://vpattar.github.io/homeownership-returns/
 
-## Quick Links
-
-- 📖 **[Development Setup Guide](./DEVELOPMENT.md)** - Instructions for local development and configuration
-- 🚀 **[Deployment Guide](#deployment)** - How to deploy to GitHub Pages
-- 🔒 **[Security](#security-best-practices)** - Secrets management and best practices
 
 ## What This Application Does
 
@@ -98,23 +93,6 @@ homeownership-returns/
     └── workflows/
         └── deploy.yml      - GitHub Actions CI/CD pipeline
 ```
-
-## Setup & Development
-
-For detailed setup instructions including local development and secret configuration, see the **[Development Setup Guide](./DEVELOPMENT.md)**.
-
-### Quick Start (Local Development)
-
-1. Clone the repository
-2. Create `config.js` file with your local credentials (see [DEVELOPMENT.md](./DEVELOPMENT.md))
-3. Open `index.html` in your browser or use a local server:
-   ```bash
-   python -m http.server 8000
-   # or
-   npx http-server
-   ```
-4. Navigate to `http://localhost:8000`
-
 ## Calculation Methodology
 
 ### EMI Calculation
@@ -151,10 +129,6 @@ MIT License - feel free to use and modify as needed.
 - **Google Analytics**: Usage tracking and analytics
 
 
-## Deployment
-
-For production deployment instructions, see the **[Development Setup Guide - Deployment Section](./DEVELOPMENT.md#deployment)**.
-
 ### GitHub Pages Automatic Deployment
 
 1. Configure GitHub Secrets (`GOOGLE_APPS_SCRIPT_URL` and `GA_TRACKING_ID`)
@@ -167,3 +141,8 @@ For detailed security information and configuration, see the **[Development Setu
 
 ⚠️ **Important**: Never commit `config.js` with real secrets to version control.
 
+## Quick Links
+
+- 📖 **[Development Setup Guide](./DEVELOPMENT.md)** - Instructions for local development and configuration
+- 🚀 **[Deployment Guide](#deployment)** - How to deploy to GitHub Pages
+- 🔒 **[Security](#security-best-practices)** - Secrets management and best practices

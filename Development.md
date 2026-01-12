@@ -4,14 +4,29 @@ Complete guide for setting up the Home Ownership Returns Calculator for local de
 
 ## Table of Contents
 
-- [Prerequisites](#prerequisites)
+- [Quick Start](#quick-start-local-development)
+- [Prerequisites](#prerequisites-for-deployment)
 - [Local Development Setup](#local-development-setup)
 - [Configuration](#configuration)
 - [GitHub Secrets](#github-secrets)
 - [Deployment](#deployment)
 - [Troubleshooting](#troubleshooting)
+- [File Reference](#file-reference)
+- [Best Practices](#best-practices)
 
-## Prerequisites
+## Quick Start (Local Development)
+
+1. Clone the repository
+2. Create `config.js` file with your local credentials (see [Create Configuration File](#2-create-configuration-file))
+3. Open `index.html` in your browser or use a local server:
+   ```bash
+   python -m http.server 8000
+   # or
+   npx http-server
+   ```
+4. Navigate to `http://localhost:8000`
+
+## Prerequisites for Deployment
 
 - Git
 - A text editor or IDE (VS Code recommended)
@@ -120,13 +135,13 @@ The application automatically deploys to GitHub Pages when you push to the `main
 
 **Process**:
 1. Push code to `main` branch
-2. GitHub Actions workflow (`deploy.yml`) triggers automatically
+2. GitHub Actions workflow (`.github/workflows/deploy.yml`) triggers automatically
 3. Workflow reads GitHub Secrets
 4. Creates `config.js` with secret values
 5. Builds and deploys to GitHub Pages
 
 **Requirements**:
-- GitHub Secrets configured (see [GitHub Secrets](#github-secrets))
+- GitHub Secrets configured (see [Setting Up Secrets for CI/CD](#setting-up-secrets-for-cicd))
 - GitHub Pages enabled for the repository
 - `.github/workflows/deploy.yml` present in repo
 
@@ -177,7 +192,7 @@ If you're deploying to a custom server:
 Main HTML file. Contains:
 - Form inputs for user data
 - Results display elements
-- Script loading (config.js must load before script.js)
+- Script loading (`config.js` must load before `script.js`)
 - Google Analytics code
 
 ### script.js
