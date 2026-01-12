@@ -8,13 +8,22 @@
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
+    <!-- Configuration (injected at build time or local development) -->
+    <script src="config.js"></script>
+    
     <!-- Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-0REE9FK2W4"></script>
     <script>
+        const gaTrackingId = window.GA_TRACKING_ID || 'G-PLACEHOLDER';
+        
+        const script = document.createElement('script');
+        script.async = true;
+        script.src = `https://www.googletagmanager.com/gtag/js?id=${gaTrackingId}`;
+        document.head.appendChild(script);
+
         window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments);}
         gtag('js', new Date());
-        gtag('config', 'G-0REE9FK2W4');
+        gtag('config', gaTrackingId);
     </script>
 </head>
 <body>

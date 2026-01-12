@@ -1,5 +1,23 @@
-// Google Apps Script Web App URL - REPLACE WITH YOUR DEPLOYED URL
-const GOOGLE_APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxF6RqEA13RHeVlFFcyv8uq2Gt6GSo8dfXGPYOq-IsKXZkO087zjAcfYzhuGKRBOzGSZQ/exec';
+let GOOGLE_APPS_SCRIPT_URL = null;
+
+// Load the Google Apps Script URL at runtime
+function loadConfig() {
+    try {
+        // Check if it's available as a global variable (set by build process from .env)
+        if (typeof window.GOOGLE_APPS_SCRIPT_URL !== 'undefined' && window.GOOGLE_APPS_SCRIPT_URL) {
+            GOOGLE_APPS_SCRIPT_URL = window.GOOGLE_APPS_SCRIPT_URL;
+            console.log('Loaded Google Apps Script URL from build config');
+            return;
+        }
+        
+        console.warn('Google Apps Script URL not configured');
+    } catch (error) {
+        console.warn('Could not load configuration:', error);
+    }
+}
+
+// Call this when page loads
+document.addEventListener('DOMContentLoaded', loadConfig);
 
 // Store calculation results for feedback submission
 let lastCalculationResults = {};
@@ -306,34 +324,38 @@ function submitTextFeedback() {
     }
     
     // Send to Google Drive via Apps Script
-    if (GOOGLE_APPS_SCRIPT_URL) {
-        const feedbackData = {
-            timestamp: new Date().toISOString(),
-            sentiment: feedbackGiven || 'unknown',
-            feedbackText: feedbackText,
-            purchasePrice: lastCalculationResults.purchasePrice,
-            downPayment: lastCalculationResults.downPayment,
-            netReturn: lastCalculationResults.netReturn,
-            interestRate: lastCalculationResults.interestRate,
-            ownershipYears: lastCalculationResults.ownershipYears,
-            finalHomeValue: lastCalculationResults.finalHomeValue,
-            monthlyEMI: lastCalculationResults.monthlyEMI,
-            annualROI: lastCalculationResults.annualROI
-        };
-
-        console.log('Sending feedback data to Google Drive:', feedbackData);
-        
-        fetch(GOOGLE_APPS_SCRIPT_URL, {
-            method: 'POST',
-            mode: 'no-cors',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(feedbackData)
-        }).catch(error => {
-            console.error('Error sending feedback to Google Drive:', error);
-        });
+    if (!GOOGLE_APPS_SCRIPT_URL) {
+        console.warn('Google Apps Script URL not configured');
+        alert('Feedback system is not configured. Please try again later.');
+        return;
     }
+    
+    const feedbackData = {
+        timestamp: new Date().toISOString(),
+        sentiment: feedbackGiven || 'unknown',
+        feedbackText: feedbackText,
+        purchasePrice: lastCalculationResults.purchasePrice,
+        downPayment: lastCalculationResults.downPayment,
+        netReturn: lastCalculationResults.netReturn,
+        interestRate: lastCalculationResults.interestRate,
+        ownershipYears: lastCalculationResults.ownershipYears,
+        finalHomeValue: lastCalculationResults.finalHomeValue,
+        monthlyEMI: lastCalculationResults.monthlyEMI,
+        annualROI: lastCalculationResults.annualROI
+    };
+
+    console.log('Sending feedback data to Google Drive:', feedbackData);
+    
+    fetch(GOOGLE_APPS_SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(feedbackData)
+    }).catch(error => {
+        console.error('Error sending feedback to Google Drive:', error);
+    });
     
     // Hide feedback section and show thanks message
     document.getElementById('feedbackTextSection').style.display = 'none';

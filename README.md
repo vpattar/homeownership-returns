@@ -2,6 +2,14 @@
 
 A comprehensive web-based financial calculator that helps you analyze the true costs and returns of home ownership. This tool calculates your complete financial picture including mortgage payments, taxes, insurance, maintenance, opportunity costs, and visualizes your investment performance over time.
 
+This application is deployed and accessible on GitHub Pages at: https://vpattar.github.io/homeownership-returns/
+
+## Quick Links
+
+- 📖 **[Development Setup Guide](./DEVELOPMENT.md)** - Instructions for local development and configuration
+- 🚀 **[Deployment Guide](#deployment)** - How to deploy to GitHub Pages
+- 🔒 **[Security](#security-best-practices)** - Secrets management and best practices
+
 ## What This Application Does
 
 The Home Ownership Returns Calculator provides a detailed financial analysis of home ownership by:
@@ -72,129 +80,40 @@ The application features an interactive yearly bar chart that displays:
    - Annual ROI percentage
    - Interactive yearly progress chart
 
-4. **Adjust Scenarios**: Modify any  and form inputs
-- `styles.css` - Styling, layout, and responsive design
-- `script.js` - Calculation logic and Chart.js visualization
-- `README.md` - This documentation file
+4. **Adjust Scenarios**: Modify any input and recalculate to see how different assumptions affect your returns
 
-## Technologies Used
+## Project Structure
 
-- **HTML5**: Semantic markup and structure
-- **CSS3**: Modern styling with gradients and responsive design
-- **JavaScript (ES6+)**: Financial calculations and DOM manipulation
-- **Chart.js**: Interactive data visualization library
-- **Google Analytics**: Usage tracking and analytics
-
-## Google Analytics Setup
-
-The application includes Google Analytics to track usage statistics. To set up:
-
-1. Create a Google Analytics 4 property at [analytics.google.com](https://analytics.google.com)
-2. Get your Measurement ID (format: G-XXXXXXXXXX)
-3. Replace `G-XXXXXXXXXX` in [index.html](index.html) (line 13 and 18) with your actual Measurement ID
-
-**Tracked Events:**
-- **Page Views**: Automatic tracking of how many users visit the application
-- **Calculate Returns**: Custom event triggered each time the "Calculate Returns" button is clicked
-- **Feedback Sentiment**: Tracks positive/negative feedback button clicks
-- **Feedback Submitted**: Tracks when users submit text feedback
-
-**Privacy Note**: Google Analytics is configured with standard privacy settings. No personally identifiable information (PII) is collected. Only aggregate usage statistics are tracked.
-
-## Google Drive Feedback Storage Setup
-
-User feedback (including text comments) is automatically saved to a Google Doc. To set up:
-
-### 1. Create the Google Apps Script
-
-1. Go to [script.google.com](https://script.google.com)
-2. Click **New Project**
-3. Copy and paste the following code:
-
-```javascript
-function doPost(e) {
-  try {
-    // Your Google Doc ID - REPLACE THIS
-    const DOC_ID = 'YOUR_GOOGLE_DOC_ID_HERE';
-    
-    const doc = DocumentApp.openById(DOC_ID);
-    const body = doc.getBody();
-    
-    // Parse the incoming data
-    const data = JSON.parse(e.postData.contents);
-    
-    // Format the feedback entry
-    const timestamp = new Date().toLocaleString();
-    const separator = '\n' + '='.repeat(50) + '\n';
-    
-    const entry = `${separator}Feedback Received: ${timestamp}\n` +
-                  `Sentiment: ${data.sentiment}\n` +
-                  `Feedback Text: ${data.feedbackText || 'No text provided'}\n` +
-                  `Purchase Price: $${data.purchasePrice}\n` +
-                  `Down Payment: $${data.downPayment}\n` +
-                  `Net Return: $${data.netReturn}\n` +
-                  `Interest Rate: ${data.interestRate}%\n` +
-                  `Ownership Years: ${data.ownershipYears}\n` +
-                  `Final Home Value: $${data.finalHomeValue}\n` +
-                  `Monthly EMI: $${data.monthlyEMI}\n` +
-                  `Annual ROI: ${data.annualROI}%\n` +
-                  separator;
-    
-    body.appendParagraph(entry);
-    
-    return ContentService.createTextOutput(JSON.stringify({
-      status: 'success'
-    })).setMimeType(ContentService.MimeType.JSON);
-    
-  } catch (error) {
-    return ContentService.createTextOutput(JSON.stringify({
-      status: 'error',
-      message: error.toString()
-    })).setMimeType(ContentService.MimeType.JSON);
-  }
-}
+```
+homeownership-returns/
+├── index.html              - Main HTML file
+├── script.js               - Calculation logic and visualization
+├── styles.css              - Styling and responsive design
+├── config.js               - Configuration file (local development only)
+├── .env.example            - Example environment variables
+├── .gitignore              - Git ignore rules
+├── README.md               - This file
+├── DEVELOPMENT.md          - Development setup and configuration guide
+└── .github/
+    └── workflows/
+        └── deploy.yml      - GitHub Actions CI/CD pipeline
 ```
 
-4. Save the project (name it "Feedback Collector" or similar)
+## Setup & Development
 
-### 2. Create a Google Doc for Feedback
+For detailed setup instructions including local development and secret configuration, see the **[Development Setup Guide](./DEVELOPMENT.md)**.
 
-1. Create a new Google Doc (this will store all feedback)
-2. Name it "Homeownership Calculator Feedback"
-3. Copy the Document ID from the URL: `https://docs.google.com/document/d/DOCUMENT_ID_HERE/edit`
-4. Go back to your Apps Script and replace `YOUR_GOOGLE_DOC_ID_HERE` with the actual Document ID
+### Quick Start (Local Development)
 
-### 3. Deploy the Apps Script
-
-1. Click **Deploy** → **New deployment**
-2. Click the gear icon ⚙️ next to "Select type" and choose **Web app**
-3. Configure:
-   - **Description**: "Feedback webhook"
-   - **Execute as**: Me
-   - **Who has access**: Anyone
-4. Click **Deploy**
-5. **Authorize** the script when prompted
-6. Copy the **Web app URL** (it looks like: `https://script.google.com/macros/s/AKfycby.../exec`)
-
-### 4. Update Your Application
-
-1. Open [script.js](script.js)
-2. Find line 2: `const GOOGLE_APPS_SCRIPT_URL = 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE';`
-3. Replace `YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE` with your actual Web app URL
-
-### 5. Test It
-
-1. Run your application
-2. Calculate returns
-3. Submit feedback
-4. Check your Google Doc - the feedback should appear!
-
-**What Gets Stored:**
-- Timestamp
-- Sentiment (positive/negative)
-- User's feedback text
-- All calculation inputs and results
-- This helps you understand the context of each feedback
+1. Clone the repository
+2. Create `config.js` file with your local credentials (see [DEVELOPMENT.md](./DEVELOPMENT.md))
+3. Open `index.html` in your browser or use a local server:
+   ```bash
+   python -m http.server 8000
+   # or
+   npx http-server
+   ```
+4. Navigate to `http://localhost:8000`
 
 ## Calculation Methodology
 
@@ -217,32 +136,34 @@ Total Return = (Benefits - Costs)
 Benefits = Rent Saved + Tax Savings + Home Appreciation
 Costs = Mortgage Payments + Taxes + Insurance + Maintenance + Opportunity Cost
 ```
-This application is deployed on GitHub Pages at: https://vpattar.github.io/homeownership-returns/
-
-## Local Development
-
-Simply open `index.html` in your web browser, or use a local server:
-
-```bash
-# Using Python
-python -m http.server 8000
-
-# Using Node.js (http-server)
-npx http-server
-
-# Using PHP
-php -S localhost:8000
-```
-
-Then navigate to `http://localhost:8000` in your browser.
-
-## Files
-
-- `index.html` - Main HTML structure
-- `styles.css` - Styling and layout
-- `script.js` - Calculation logic
-- `README.md` - This file
 
 ## License
 
 MIT License - feel free to use and modify as needed.
+
+
+## Technologies Used
+
+- **HTML5**: Semantic markup and structure
+- **CSS3**: Modern styling with gradients and responsive design
+- **JavaScript (ES6+)**: Financial calculations and DOM manipulation
+- **Chart.js**: Interactive data visualization library
+- **Google Analytics**: Usage tracking and analytics
+
+
+## Deployment
+
+For production deployment instructions, see the **[Development Setup Guide - Deployment Section](./DEVELOPMENT.md#deployment)**.
+
+### GitHub Pages Automatic Deployment
+
+1. Configure GitHub Secrets (`GOOGLE_APPS_SCRIPT_URL` and `GA_TRACKING_ID`)
+2. Push to `main` branch
+3. GitHub Actions automatically builds and deploys
+
+## Security Best Practices
+
+For detailed security information and configuration, see the **[Development Setup Guide - Security Section](./DEVELOPMENT.md#security-best-practices)**.
+
+⚠️ **Important**: Never commit `config.js` with real secrets to version control.
+

@@ -1,0 +1,29 @@
+name: Deploy to GitHub Pages
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Create config from secrets
+        run: |
+          cat > config.js << 'EOF'
+          // Configuration injected at build time
+          window.GOOGLE_APPS_SCRIPT_URL = '${{ secrets.GOOGLE_APPS_SCRIPT_URL }}';
+          window.GA_TRACKING_ID = '${{ secrets.GA_TRACKING_ID }}';
+          EOF
+      
+      - name: Inject config into index.html
+        run: |
+          sed -i '/<script src="script.js"><\/script>/i \    <script src="config.js"></script>' index.html
+      
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./
