@@ -1,8 +1,5 @@
 # Configuration files with secrets
 .env
-.env.local
-.env.*.local
-config.js
 
 # Dependencies and build outputs
 node_modules/
