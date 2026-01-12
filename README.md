@@ -83,6 +83,21 @@ The application features an interactive yearly bar chart that displays:
 - **CSS3**: Modern styling with gradients and responsive design
 - **JavaScript (ES6+)**: Financial calculations and DOM manipulation
 - **Chart.js**: Interactive data visualization library
+- **Google Analytics**: Usage tracking and analytics
+
+## Google Analytics Setup
+
+The application includes Google Analytics to track usage statistics. To set up:
+
+1. Create a Google Analytics 4 property at [analytics.google.com](https://analytics.google.com)
+2. Get your Measurement ID (format: G-XXXXXXXXXX)
+3. Replace `G-XXXXXXXXXX` in [index.html](index.html) (line 13 and 18) with your actual Measurement ID
+
+**Tracked Events:**
+- **Page Views**: Automatic tracking of how many users visit the application
+- **Calculate Returns**: Custom event triggered each time the "Calculate Returns" button is clicked
+
+**Privacy Note**: Google Analytics is configured with standard privacy settings. No personally identifiable information (PII) is collected. Only aggregate usage statistics are tracked.
 
 ## Calculation Methodology
 

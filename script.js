@@ -26,6 +26,14 @@ function calculateEMI(principal, annualRate, years) {
 
 // Main calculation function
 function calculateReturns() {
+    // Track calculation event in Google Analytics
+    if (typeof gtag !== 'undefined') {
+        gtag('event', 'calculate_returns', {
+            event_category: 'engagement',
+            event_label: 'Calculate Returns Button'
+        });
+    }
+    
     // Get input values
     const purchasePrice = parseFloat(document.getElementById('purchasePrice').value) || 0;
     const downPayment = parseFloat(document.getElementById('downPayment').value) || 0;
