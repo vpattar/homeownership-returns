@@ -6,6 +6,7 @@
     <meta name="description" content="Home Ownership Returns Calculator - Calculate your home investment returns">
     <title>Home Ownership Returns Calculator</title>
     <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <div class="container">
@@ -20,17 +21,17 @@
                 <form id="calculatorForm">
                     <div class="form-group">
                         <label for="purchasePrice">Total Home Value ($)</label>
-                        <input type="number" id="purchasePrice" value="500000" required>
+                        <input type="number" id="purchasePrice" value="1480000" required>
                     </div>
 
                     <div class="form-group">
                         <label for="downPayment">Down Payment ($)</label>
-                        <input type="number" id="downPayment" value="100000" required>
+                        <input type="number" id="downPayment" value="330000" required>
                     </div>
 
                     <div class="form-group">
                         <label for="interestRate">Interest Rate (%)</label>
-                        <input type="number" id="interestRate" step="0.1" value="6.5" required>
+                        <input type="number" id="interestRate" step="0.01" value="6.25" required>
                     </div>
 
                     <div class="form-group">
@@ -45,12 +46,12 @@
 
                     <div class="form-group">
                         <label for="propertyTax">Annual Property Tax ($)</label>
-                        <input type="number" id="propertyTax" value="6000" required>
+                        <input type="number" id="propertyTax" value="18000" required>
                     </div>
 
                     <div class="form-group">
                         <label for="insurance">Annual Home Insurance ($)</label>
-                        <input type="number" id="insurance" value="1500" required>
+                        <input type="number" id="insurance" value="1200" required>
                     </div>
 
                     <div class="form-group">
@@ -60,17 +61,17 @@
 
                     <div class="form-group">
                         <label for="monthlyRent">Monthly Rent Saved ($)</label>
-                        <input type="number" id="monthlyRent" value="2500" required>
+                        <input type="number" id="monthlyRent" value="4000" required>
                     </div>
 
                     <div class="form-group">
                         <label for="investmentReturn">Alternative Investment Return (%)</label>
-                        <input type="number" id="investmentReturn" step="0.1" value="7" required>
+                        <input type="number" id="investmentReturn" step="0.1" value="10" required>
                     </div>
 
                     <div class="form-group">
                         <label for="taxBracket">Tax Bracket (%)</label>
-                        <input type="number" id="taxBracket" value="24" required>
+                        <input type="number" id="taxBracket" value="32" required>
                     </div>
 
                     <div class="form-group">
@@ -95,11 +96,11 @@
                     </div>
                     <div class="result-card">
                         <h3>Total Costs</h3>
-                        <p id="totalCosts" class="result-value">$0</p>
+                        <p id="cumulativeCosts" class="result-value">$0</p>
                     </div>
                     <div class="result-card">
                         <h3>Total Benefits</h3>
-                        <p id="totalBenefits" class="result-value">$0</p>
+                        <p id="cumulativeBenefits" class="result-value">$0</p>
                     </div>
                     <div class="result-card">
                         <h3>Equity Built</h3>
@@ -130,6 +131,10 @@
                             <span id="totalPrincipal" class="detail-value">$0</span>
                         </div>
                     </div>
+                </div>
+                <div class="chart-section">
+                    <h3>Yearly Progress</h3>
+                    <canvas id="yearlyChart"></canvas>
                 </div>
             </div>
         </main>

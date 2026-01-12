@@ -45,14 +45,21 @@ function calculateReturns() {
     const monthlyEMI = calculateEMI(loanAmount, interestRate, loanTerm);
     const annualEMI = monthlyEMI * 12;
 
-    // Yearly breakdown
+    // Yearly breakdown - store data for chart
+    const chartData = {
+        years: [],
+        cumulativeBenefits: [],
+        opportunityCosts: [],
+        totalReturns: []
+    };
+    
     let remainingLoan = loanAmount;
     let totalPrincipalPaid = 0;
     let totalInterestPaid = 0;
     let cumulativeOpportunityCost = downPayment;
-    let cumulativeCosts = 0;
     let cumulativeBenefits = 0;
-    let cumulativeReturn = -downPayment;
+    let cumulativeReturn = 0;
+    let cumulativeCosts = 0;
 
     for (let year = 1; year <= ownershipYears; year++) {
         // Calculate mortgage payments breakdown
@@ -72,36 +79,43 @@ function calculateReturns() {
 
         // Tax savings
         const mortgageInterestDeduction = Math.min(yearInterest, 750000 * interestRate / 100);
-        const saltDeduction = Math.min(propertyTax, 10000);
-        const taxSavings = (mortgageInterestDeduction + saltDeduction) * (taxBracket / 100);
+        const saltDeduction = Math.min(propertyTax, 40000);
+        const stateTaxDeduction = yearInterest * 10 / 100; // Assuming 10% state tax for SALT calculation
+
+        const taxSavings = (mortgageInterestDeduction + saltDeduction) * (taxBracket / 100) + stateTaxDeduction;
 
         // Rent saved
         const rentSaved = monthlyRent * 12;
-
-        // Opportunity cost calculation
-        cumulativeOpportunityCost = (cumulativeOpportunityCost + annualEMI) * (1 + investmentReturn / 100);
-        const opportunityCost = cumulativeOpportunityCost - downPayment - (annualEMI * year);
-
+    
         // Home appreciation
         const homeValue = purchasePrice * Math.pow(1 + appreciationRate / 100, year);
-        const appreciation = homeValue - purchasePrice;
+
+        // Cumulative returns from home ownership
+        const cumulativeReturnsFromHome = homeValue - remainingLoan;
 
         // Year totals
-        const yearCosts = yearPrincipal + yearInterest + propertyTax + insurance + maintenance + opportunityCost;
-        const yearBenefits = rentSaved + taxSavings + appreciation;
-        const yearNetReturn = yearBenefits - yearCosts;
-
+        const yearCosts =  propertyTax + insurance + maintenance + annualEMI;
         cumulativeCosts += yearCosts;
-        cumulativeBenefits += yearBenefits;
-        cumulativeReturn += yearNetReturn;
+        const yearBenefits = rentSaved + taxSavings;
+        const yearNetReturn =  yearCosts - yearBenefits;
+        console.log(yearCosts, propertyTax, insurance, maintenance, annualEMI);
+        console.log(yearBenefits, rentSaved, taxSavings, yearNetReturn);        
+
+        // Update cumulative values
+        cumulativeOpportunityCost = (cumulativeOpportunityCost + yearNetReturn)  * (1 + investmentReturn / 100);
+    
+        cumulativeReturn = cumulativeReturnsFromHome - cumulativeOpportunityCost;
+
+        // Store data for chart
+        chartData.years.push(year);
+        chartData.cumulativeBenefits.push(cumulativeReturnsFromHome - downPayment);
+        chartData.opportunityCosts.push(cumulativeOpportunityCost - downPayment);
+        chartData.totalReturns.push(cumulativeReturn);
     }
 
     // Final calculations
-    const finalYear = ownershipYears;
-    const finalHomeValue = purchasePrice * Math.pow(1 + appreciationRate / 100, finalYear);
+    const finalHomeValue = purchasePrice * Math.pow(1 + appreciationRate / 100, ownershipYears);
     const equityBuilt = finalHomeValue - remainingLoan;
-    const totalCosts = cumulativeCosts;
-    const totalBenefits = cumulativeBenefits;
     const netReturn = cumulativeReturn;
     const annualROI = (netReturn / (downPayment + totalPrincipalPaid)) * 100 / ownershipYears;
 
@@ -110,8 +124,8 @@ function calculateReturns() {
     document.getElementById('netReturn').style.color = netReturn >= 0 ? '#10b981' : '#ef4444';
     
     document.getElementById('finalHomeValue').textContent = formatCurrency(finalHomeValue);
-    document.getElementById('totalCosts').textContent = formatCurrency(totalCosts);
-    document.getElementById('totalBenefits').textContent = formatCurrency(totalBenefits);
+    document.getElementById('cumulativeCosts').textContent = formatCurrency(cumulativeCosts);
+    document.getElementById('cumulativeBenefits').textContent = formatCurrency(cumulativeBenefits);
     document.getElementById('equityBuilt').textContent = formatCurrency(equityBuilt);
     document.getElementById('annualROI').textContent = formatPercent(annualROI);
     document.getElementById('annualROI').style.color = annualROI >= 0 ? '#10b981' : '#ef4444';
@@ -124,8 +138,99 @@ function calculateReturns() {
     // Show results section
     document.getElementById('results').style.display = 'block';
     
+    // Create chart
+    createYearlyChart(chartData);
+    
     // Smooth scroll to results
     document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// Variable to store chart instance
+let yearlyChartInstance = null;
+
+// Create yearly bar chart
+function createYearlyChart(data) {
+    const ctx = document.getElementById('yearlyChart').getContext('2d');
+    
+    // Destroy existing chart if it exists
+    if (yearlyChartInstance) {
+        yearlyChartInstance.destroy();
+    }
+    
+    yearlyChartInstance = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: data.years.map(y => `Year ${y}`),
+            datasets: [
+                {
+                    label: 'Cumulative Benefits',
+                    data: data.cumulativeBenefits,
+                    backgroundColor: 'rgba(59, 130, 246, 0.7)',
+                    borderColor: 'rgba(59, 130, 246, 1)',
+                    borderWidth: 1
+                },
+                {
+                    label: 'Loss Due to Opportunity Cost',
+                    data: data.opportunityCosts,
+                    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                    borderColor: 'rgba(0, 0, 0, 1)',
+                    borderWidth: 1
+                },
+                {
+                    label: 'Total Return',
+                    data: data.totalReturns,
+                    backgroundColor: function(context) {
+                        const value = context.parsed.y;
+                        return value >= 0 ? 'rgba(16, 185, 129, 0.7)' : 'rgba(239, 68, 68, 0.7)';
+                    },
+                    borderColor: function(context) {
+                        const value = context.parsed.y;
+                        return value >= 0 ? 'rgba(16, 185, 129, 1)' : 'rgba(239, 68, 68, 1)';
+                    },
+                    borderWidth: 1
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'top'
+                },
+                title: {
+                    display: true,
+                    text: 'Yearly Home Ownership Progress',
+                    font: {
+                        size: 16
+                    }
+                },
+                tooltip: {
+                    callbacks: {
+                        label: function(context) {
+                            let label = context.dataset.label || '';
+                            if (label) {
+                                label += ': ';
+                            }
+                            label += formatCurrency(context.parsed.y);
+                            return label;
+                        }
+                    }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    ticks: {
+                        callback: function(value) {
+                            return '$' + value.toLocaleString();
+                        }
+                    }
+                }
+            }
+        }
+    });
 }
 
 // Event listener for form submission
