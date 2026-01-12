@@ -96,8 +96,105 @@ The application includes Google Analytics to track usage statistics. To set up:
 **Tracked Events:**
 - **Page Views**: Automatic tracking of how many users visit the application
 - **Calculate Returns**: Custom event triggered each time the "Calculate Returns" button is clicked
+- **Feedback Sentiment**: Tracks positive/negative feedback button clicks
+- **Feedback Submitted**: Tracks when users submit text feedback
 
 **Privacy Note**: Google Analytics is configured with standard privacy settings. No personally identifiable information (PII) is collected. Only aggregate usage statistics are tracked.
+
+## Google Drive Feedback Storage Setup
+
+User feedback (including text comments) is automatically saved to a Google Doc. To set up:
+
+### 1. Create the Google Apps Script
+
+1. Go to [script.google.com](https://script.google.com)
+2. Click **New Project**
+3. Copy and paste the following code:
+
+```javascript
+function doPost(e) {
+  try {
+    // Your Google Doc ID - REPLACE THIS
+    const DOC_ID = 'YOUR_GOOGLE_DOC_ID_HERE';
+    
+    const doc = DocumentApp.openById(DOC_ID);
+    const body = doc.getBody();
+    
+    // Parse the incoming data
+    const data = JSON.parse(e.postData.contents);
+    
+    // Format the feedback entry
+    const timestamp = new Date().toLocaleString();
+    const separator = '\n' + '='.repeat(50) + '\n';
+    
+    const entry = `${separator}Feedback Received: ${timestamp}\n` +
+                  `Sentiment: ${data.sentiment}\n` +
+                  `Feedback Text: ${data.feedbackText || 'No text provided'}\n` +
+                  `Purchase Price: $${data.purchasePrice}\n` +
+                  `Down Payment: $${data.downPayment}\n` +
+                  `Net Return: $${data.netReturn}\n` +
+                  `Interest Rate: ${data.interestRate}%\n` +
+                  `Ownership Years: ${data.ownershipYears}\n` +
+                  `Final Home Value: $${data.finalHomeValue}\n` +
+                  `Monthly EMI: $${data.monthlyEMI}\n` +
+                  `Annual ROI: ${data.annualROI}%\n` +
+                  separator;
+    
+    body.appendParagraph(entry);
+    
+    return ContentService.createTextOutput(JSON.stringify({
+      status: 'success'
+    })).setMimeType(ContentService.MimeType.JSON);
+    
+  } catch (error) {
+    return ContentService.createTextOutput(JSON.stringify({
+      status: 'error',
+      message: error.toString()
+    })).setMimeType(ContentService.MimeType.JSON);
+  }
+}
+```
+
+4. Save the project (name it "Feedback Collector" or similar)
+
+### 2. Create a Google Doc for Feedback
+
+1. Create a new Google Doc (this will store all feedback)
+2. Name it "Homeownership Calculator Feedback"
+3. Copy the Document ID from the URL: `https://docs.google.com/document/d/DOCUMENT_ID_HERE/edit`
+4. Go back to your Apps Script and replace `YOUR_GOOGLE_DOC_ID_HERE` with the actual Document ID
+
+### 3. Deploy the Apps Script
+
+1. Click **Deploy** → **New deployment**
+2. Click the gear icon ⚙️ next to "Select type" and choose **Web app**
+3. Configure:
+   - **Description**: "Feedback webhook"
+   - **Execute as**: Me
+   - **Who has access**: Anyone
+4. Click **Deploy**
+5. **Authorize** the script when prompted
+6. Copy the **Web app URL** (it looks like: `https://script.google.com/macros/s/AKfycby.../exec`)
+
+### 4. Update Your Application
+
+1. Open [script.js](script.js)
+2. Find line 2: `const GOOGLE_APPS_SCRIPT_URL = 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE';`
+3. Replace `YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE` with your actual Web app URL
+
+### 5. Test It
+
+1. Run your application
+2. Calculate returns
+3. Submit feedback
+4. Check your Google Doc - the feedback should appear!
+
+**What Gets Stored:**
+- Timestamp
+- Sentiment (positive/negative)
+- User's feedback text
+- All calculation inputs and results
+- This helps you understand the context of each feedback
 
 ## Calculation Methodology
 

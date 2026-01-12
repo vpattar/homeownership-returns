@@ -1,3 +1,9 @@
+// Google Apps Script Web App URL - REPLACE WITH YOUR DEPLOYED URL
+const GOOGLE_APPS_SCRIPT_URL = 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE';
+
+// Store calculation results for feedback submission
+let lastCalculationResults = {};
+
 // Format currency
 function formatCurrency(amount) {
     return new Intl.NumberFormat('en-US', {
@@ -143,6 +149,18 @@ function calculateReturns() {
     document.getElementById('totalInterest').textContent = formatCurrency(totalInterestPaid);
     document.getElementById('totalPrincipal').textContent = formatCurrency(totalPrincipalPaid);
 
+    // Store results for feedback submission
+    lastCalculationResults = {
+        purchasePrice,
+        downPayment,
+        interestRate,
+        ownershipYears,
+        netReturn,
+        finalHomeValue,
+        monthlyEMI,
+        annualROI
+    };
+
     // Show results section
     document.getElementById('results').style.display = 'block';
     
@@ -284,6 +302,34 @@ function submitTextFeedback() {
             event_label: feedbackGiven || 'unknown',
             feedback_has_text: feedbackText.length > 0,
             feedback_length: feedbackText.length
+        });
+    }
+    
+    // Send to Google Drive via Apps Script
+    if (GOOGLE_APPS_SCRIPT_URL && GOOGLE_APPS_SCRIPT_URL !== 'YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE') {
+        const feedbackData = {
+            timestamp: new Date().toISOString(),
+            sentiment: feedbackGiven || 'unknown',
+            feedbackText: feedbackText,
+            purchasePrice: lastCalculationResults.purchasePrice,
+            downPayment: lastCalculationResults.downPayment,
+            netReturn: lastCalculationResults.netReturn,
+            interestRate: lastCalculationResults.interestRate,
+            ownershipYears: lastCalculationResults.ownershipYears,
+            finalHomeValue: lastCalculationResults.finalHomeValue,
+            monthlyEMI: lastCalculationResults.monthlyEMI,
+            annualROI: lastCalculationResults.annualROI
+        };
+        
+        fetch(GOOGLE_APPS_SCRIPT_URL, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(feedbackData)
+        }).catch(error => {
+            console.error('Error sending feedback to Google Drive:', error);
         });
     }
     
