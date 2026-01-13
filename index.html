@@ -84,7 +84,7 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="appreciationRate">Annual Home Appreciation (%)</label>
+                        <label for="appreciationRate">Annual Home Value Appreciation (%)</label>
                         <input type="number" id="appreciationRate" step="0.1" value="4" required>
                     </div>
 
@@ -185,9 +185,34 @@
                         ℹ️ Monthly rental appreciation is considered as 2% per year
                     </p>
                 </div>
-                <div class="chart-section">
+                <div class="visualization-section chart-section">
                     <h3>Yearly Progress</h3>
-                    <canvas id="yearlyChart"></canvas>
+                    <div class="tab-buttons">
+                        <button class="tab-btn active" onclick="switchTab('chart')">Chart View</button>
+                        <button class="tab-btn" onclick="switchTab('table')">Table View</button>
+                    </div>
+                    <div id="chartView" class="tab-content active">
+                        <canvas id="yearlyChart"></canvas>
+                    </div>
+                    <div id="tableView" class="tab-content">
+                        <div class="table-container">
+                            <table id="yearlyTable">
+                                <thead>
+                                    <tr>
+                                        <th>Year</th>
+                                        <th>Home Value</th>
+                                        <th>Equity Built</th>
+                                        <th>Cumulative Benefits</th>
+                                        <th>Opportunity Cost</th>
+                                        <th>Net Return</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tableBody">
+                                    <!-- Table rows will be populated by JavaScript -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </div>
                 <div class="feedback-section">
                     <h3>Was this helpful?</h3>

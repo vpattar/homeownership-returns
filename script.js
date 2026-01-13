@@ -78,13 +78,15 @@ function calculateReturns() {
     const monthlyEMI = calculateEMI(loanAmount, interestRate, loanTerm);
     const annualEMI = monthlyEMI * 12;
 
-    // Yearly breakdown - store data for chart
+    // Yearly breakdown - store data for chart and table
     const chartData = {
         years: [],
         cumulativeBenefits: [],
         opportunityCosts: [],
         totalReturns: []
     };
+    
+    const tableData = [];
     
     let remainingLoan = loanAmount;
     let totalPrincipalPaid = 0;
@@ -148,6 +150,16 @@ function calculateReturns() {
         chartData.cumulativeBenefits.push(cumulativeReturnsFromHome - downPayment);
         chartData.opportunityCosts.push(cumulativeOpportunityCost - downPayment);
         chartData.totalReturns.push(cumulativeReturn);
+        
+        // Store detailed data for table
+        tableData.push({
+            year: year,
+            homeValue: homeValue,
+            equityBuilt: cumulativeReturnsFromHome,
+            cumulativeBenefits: cumulativeReturnsFromHome - downPayment,
+            opportunityCost: cumulativeOpportunityCost - downPayment,
+            netReturn: cumulativeReturn
+        });
     }
 
     // Final calculations
@@ -187,8 +199,9 @@ function calculateReturns() {
     // Show results section
     document.getElementById('results').style.display = 'block';
     
-    // Create chart
+    // Create chart and populate table
     createYearlyChart(chartData);
+    populateTable(tableData);
     
     // Smooth scroll to results
     document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -196,6 +209,55 @@ function calculateReturns() {
 
 // Variable to store chart instance
 let yearlyChartInstance = null;
+
+// Function to populate table
+function populateTable(data) {
+    const tableBody = document.getElementById('tableBody');
+    tableBody.innerHTML = '';
+    
+    data.forEach(row => {
+        const tr = document.createElement('tr');
+        
+        tr.innerHTML = `
+            <td>Year ${row.year}</td>
+            <td>${formatCurrency(row.homeValue)}</td>
+            <td>${formatCurrency(row.equityBuilt)}</td>
+            <td>${formatCurrency(row.cumulativeBenefits)}</td>
+            <td>${formatCurrency(row.opportunityCost)}</td>
+            <td class="${row.netReturn >= 0 ? 'positive' : 'negative'}">${formatCurrency(row.netReturn)}</td>
+        `;
+        
+        tableBody.appendChild(tr);
+    });
+}
+
+// Function to switch between chart and table views
+function switchTab(tabName) {
+    // Update tab buttons
+    const tabButtons = document.querySelectorAll('.tab-btn');
+    tabButtons.forEach(btn => {
+        btn.classList.remove('active');
+    });
+    event.target.classList.add('active');
+    
+    // Update tab content
+    document.getElementById('chartView').classList.remove('active');
+    document.getElementById('tableView').classList.remove('active');
+    
+    if (tabName === 'chart') {
+        document.getElementById('chartView').classList.add('active');
+    } else {
+        document.getElementById('tableView').classList.add('active');
+    }
+    
+    // Track tab switch in Google Analytics
+    if (typeof gtag !== 'undefined') {
+        gtag('event', 'tab_switch', {
+            event_category: 'engagement',
+            event_label: tabName
+        });
+    }
+}
 
 // Create yearly bar chart
 function createYearlyChart(data) {

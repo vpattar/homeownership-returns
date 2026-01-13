@@ -190,6 +190,96 @@ main {
     margin-top: 30px;
 }
 
+.tab-buttons {
+    display: flex;
+    gap: 10px;
+    margin: 20px 0;
+    border-bottom: 2px solid #e5e7eb;
+}
+
+.tab-btn {
+    padding: 12px 24px;
+    background: transparent;
+    border: none;
+    border-bottom: 3px solid transparent;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: 500;
+    color: #6b7280;
+    transition: all 0.3s ease;
+}
+
+.tab-btn:hover {
+    color: #667eea;
+}
+
+.tab-btn.active {
+    color: #667eea;
+    border-bottom-color: #667eea;
+}
+
+.tab-content {
+    display: none;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+.table-container {
+    overflow-x: auto;
+    margin-top: 20px;
+}
+
+#yearlyTable {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+}
+
+#yearlyTable thead {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+#yearlyTable th {
+    padding: 12px 16px;
+    text-align: right;
+    font-weight: 600;
+}
+
+#yearlyTable th:first-child {
+    text-align: left;
+}
+
+#yearlyTable tbody tr {
+    border-bottom: 1px solid #e5e7eb;
+    transition: background-color 0.2s;
+}
+
+#yearlyTable tbody tr:hover {
+    background-color: #f9fafb;
+}
+
+#yearlyTable td {
+    padding: 12px 16px;
+    text-align: right;
+}
+
+#yearlyTable td:first-child {
+    text-align: left;
+    font-weight: 600;
+    color: #374151;
+}
+
+#yearlyTable .positive {
+    color: #10b981;
+}
+
+#yearlyTable .negative {
+    color: #ef4444;
+}
+
 .chart-section h3 {
     color: #333;
     margin-bottom: 20px;
