@@ -112,12 +112,12 @@ These variables are injected into the application before `script.js` loads.
 #### Secret 1: GOOGLE_APPS_SCRIPT_URL
 - **Name**: `GOOGLE_APPS_SCRIPT_URL`
 - **Value**: Your deployed Google Apps Script URL
-- **Example**: `https://script.google.com/macros/s/AKfycbxF6RqEA13RHeVlFFcyv8uq2Gt6GSo8dfXGPYOq-IsKXZkO087zjAcfYzhuGKRBOzGSZQ/exec`
+- **Example**: `https://script.google.com/macros/s/AKfycbxF6RqEA13RHeVlFFcyv8uq2Gt6GSo8dfXGPYOq-IsPXZkO087zjAcfYzhuGKRBOzGSZQ/exec`
 
 #### Secret 2: GA_TRACKING_ID
 - **Name**: `GA_TRACKING_ID`
 - **Value**: Your Google Analytics Measurement ID
-- **Example**: `G-0REE9FK2W4`
+- **Example**: `G-XXXE9FXXXX`
 
 ### Verifying Secrets
 

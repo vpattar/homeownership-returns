@@ -70,6 +70,7 @@ function calculateReturns() {
     const monthlyRent = parseFloat(document.getElementById('monthlyRent').value) || 0;
     const investmentReturn = parseFloat(document.getElementById('investmentReturn').value) || 0;
     const taxBracket = parseFloat(document.getElementById('taxBracket').value) || 0;
+    const stateTaxBracket = parseFloat(document.getElementById('stateTaxBracket').value) || 0;
     const ownershipYears = parseFloat(document.getElementById('ownershipYears').value) || 10;
 
     // Basic calculations
@@ -92,6 +93,7 @@ function calculateReturns() {
     let cumulativeBenefits = 0;
     let cumulativeReturn = 0;
     let cumulativeCosts = 0;
+    let monthlyRentSaved = monthlyRent;
 
     for (let year = 1; year <= ownershipYears; year++) {
         // Calculate mortgage payments breakdown
@@ -110,14 +112,17 @@ function calculateReturns() {
         totalInterestPaid += yearInterest;
 
         // Tax savings
-        const mortgageInterestDeduction = Math.min(yearInterest, 750000 * interestRate / 100);
-        const saltDeduction = Math.min(propertyTax, 40000);
-        const stateTaxDeduction = yearInterest * 10 / 100; // Assuming 10% state tax for SALT calculation
+        const mortgageInterestDeduction = Math.min(yearInterest, 750000 * interestRate / 100) * (taxBracket / 100);
+        const stateTaxDeduction = Math.min(yearInterest, 1000000 * interestRate / 100) * (stateTaxBracket / 100);
 
-        const taxSavings = (mortgageInterestDeduction + saltDeduction) * (taxBracket / 100) + stateTaxDeduction;
+        const taxSavings = mortgageInterestDeduction + stateTaxDeduction;
+
+        // SALT 
+        // const saltDeduction = Math.min(propertyTax, 40000);
 
         // Rent saved
-        const rentSaved = monthlyRent * 12;
+        const rentSaved = monthlyRentSaved * 12;
+        monthlyRentSaved *= (1 + 2 / 100);
     
         // Home appreciation
         const homeValue = purchasePrice * Math.pow(1 + appreciationRate / 100, year);
@@ -129,13 +134,13 @@ function calculateReturns() {
         const yearCosts =  propertyTax + insurance + maintenance + annualEMI;
         cumulativeCosts += yearCosts;
         const yearBenefits = rentSaved + taxSavings;
+        cumulativeBenefits += yearBenefits;
         const yearNetReturn =  yearCosts - yearBenefits;
-        console.log(yearCosts, propertyTax, insurance, maintenance, annualEMI);
-        console.log(yearBenefits, rentSaved, taxSavings, yearNetReturn);        
+        // console.log(yearCosts, propertyTax, insurance, maintenance, annualEMI);
+        // console.log(yearBenefits, rentSaved, taxSavings, yearNetReturn);        
 
         // Update cumulative values
         cumulativeOpportunityCost = (cumulativeOpportunityCost + yearNetReturn)  * (1 + investmentReturn / 100);
-    
         cumulativeReturn = cumulativeReturnsFromHome - cumulativeOpportunityCost;
 
         // Store data for chart
@@ -366,6 +371,16 @@ function submitTextFeedback() {
 // Event listener for form submission
 document.getElementById('calculatorForm').addEventListener('submit', function(e) {
     e.preventDefault();
+    
+    // Validate Years to Analyze is less than or equal to Loan Term
+    const loanTerm = parseFloat(document.getElementById('loanTerm').value) || 30;
+    const ownershipYears = parseFloat(document.getElementById('ownershipYears').value) || 10;
+    
+    if (ownershipYears > loanTerm) {
+        alert('Years to Analyze cannot be greater than Loan Term. Please adjust your inputs.');
+        return;
+    }
+    
     calculateReturns();
     
     // Reset feedback section when recalculating
