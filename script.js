@@ -95,6 +95,7 @@ function calculateReturns() {
     let cumulativeBenefits = 0;
     let cumulativeReturn = 0;
     let cumulativeCosts = 0;
+    let cumulativeTaxSavings = 0;
     let monthlyRentSaved = monthlyRent;
 
     for (let year = 1; year <= ownershipYears; year++) {
@@ -118,6 +119,7 @@ function calculateReturns() {
         const stateTaxDeduction = Math.min(yearInterest, 1000000 * interestRate / 100) * (stateTaxBracket / 100);
 
         const taxSavings = mortgageInterestDeduction + stateTaxDeduction;
+        cumulativeTaxSavings += taxSavings;
 
         // SALT 
         // const saltDeduction = Math.min(propertyTax, 40000);
@@ -158,7 +160,9 @@ function calculateReturns() {
             equityBuilt: cumulativeReturnsFromHome,
             cumulativeBenefits: cumulativeReturnsFromHome - downPayment,
             opportunityCost: cumulativeOpportunityCost - downPayment,
-            netReturn: cumulativeReturn
+            netReturn: cumulativeReturn,
+            yearlyTaxSaved: taxSavings,
+            yearlyInterest: yearInterest
         });
     }
 
@@ -183,6 +187,7 @@ function calculateReturns() {
     document.getElementById('loanAmount').textContent = formatCurrency(loanAmount);
     document.getElementById('totalInterest').textContent = formatCurrency(totalInterestPaid);
     document.getElementById('totalPrincipal').textContent = formatCurrency(totalPrincipalPaid);
+    document.getElementById('totalTaxSavings').textContent = formatCurrency(cumulativeTaxSavings);
 
     // Store results for feedback submission
     lastCalculationResults = {
@@ -224,6 +229,8 @@ function populateTable(data) {
             <td>${formatCurrency(row.equityBuilt)}</td>
             <td>${formatCurrency(row.cumulativeBenefits)}</td>
             <td>${formatCurrency(row.opportunityCost)}</td>
+            <td>${formatCurrency(row.yearlyInterest)}</td>
+            <td>${formatCurrency(row.yearlyTaxSaved)}</td>
             <td class="${row.netReturn >= 0 ? 'positive' : 'negative'}">${formatCurrency(row.netReturn)}</td>
         `;
         
