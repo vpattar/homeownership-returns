@@ -115,8 +115,8 @@ function calculateReturns() {
         totalInterestPaid += yearInterest;
 
         // Tax savings
-        const mortgageInterestDeduction = Math.min(yearInterest, 750000 * interestRate / 100) * (taxBracket / 100);
-        const stateTaxDeduction = Math.min(yearInterest, 1000000 * interestRate / 100) * (stateTaxBracket / 100);
+        const mortgageInterestDeduction = Math.max(0, Math.min(yearInterest, 750000 * interestRate / 100)-32200) * (taxBracket / 100);
+        const stateTaxDeduction = Math.max(0, Math.min(yearInterest, 1000000 * interestRate / 100)-11412) * (stateTaxBracket / 100);
 
         const taxSavings = mortgageInterestDeduction + stateTaxDeduction;
         cumulativeTaxSavings += taxSavings;
